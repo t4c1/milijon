@@ -12,6 +12,7 @@ def gen(n=100):
     #data[:,4:7]/=numpy.vstack((nrm,nrm,nrm)).T  ##velikost hitrosti
     #data[:,4:7]+=numpy.random.rand(n,3)-0.5 #nakljucnost hitrosti
     data[:,4:7]*=15
+    data[:,4:7]-=numpy.sum(data[:,4:7],0)/n
     return data
 
 G=1

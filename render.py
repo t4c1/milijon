@@ -24,23 +24,24 @@ class App(ShowBase):
         model.setScale(0.1)
         #self.disableMouse()
         base.setFrameRateMeter(True)
-        self.n=50
+        self.n=100
         self.data=gen(self.n)
-        zvezde= self.render.attachNewNode("zvezde")
-        model.reparentTo(zvezde)
-        zvezde.setPosHpr(0,70,0,0,90,0)
-        zvezde.setInstanceCount(self.n)
+        self.zvezde= self.render.attachNewNode("zvezde")
+        model.reparentTo(self.zvezde)
+        self.zvezde.setPosHpr(0,70,0,0,90,0)
+        self.zvezde.setInstanceCount(self.n)
         myShader = Shader.load(Shader.SLGLSL, "vertex.glsl", "fragment.glsl" )
-        zvezde.setShader(myShader)#Shader.load('instance.cg'))
+        self.zvezde.setShader(myShader)#Shader.load('instance.cg'))
         self.render.setShaderAuto()
         self.offsets = PTA_LVecBase4f.emptyArray(self.n);
 
-        zvezde.setShaderInput('shader_data', self.offsets)
-        zvezde.setShaderInput('shader_data[0]', self.offsets)
+        self.zvezde.setShaderInput('shader_data', self.offsets)
+        self.zvezde.setShaderInput('shader_data[0]', self.offsets)
         #self.taskMgr.setupTaskChain('threaded chain', numThreads = 0, frameBudget = -1,frameSync = 1)
         self.taskMgr.add(self.update, "update")#,taskChain = 'threaded chain')
 
     def update(self,dt):
+        #self.zvezde.forceRecomputeBounds()
         update_py(self.data,0.02)
         for i in range(self.n):
             x,y,z=self.data[i,1:4]*5
