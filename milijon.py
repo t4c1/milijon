@@ -7,9 +7,9 @@ def gen(n=100):
     data[:,1:3]=numpy.random.rand(n,2)  ## x in y      porazdelitev
     data[:,3]=numpy.sqrt(2-data[:,0]**2-data[:,1]**2)*0.3  ## z
     data[:,1:4]*=numpy.random.choice([1,-1],size=(n,3))*5
-    data[:,4:7]=numpy.cross(data[:,1:4],(0,0,1))  ##smer hitrosti
+    data[:,4:7]=numpy.cross(data[:,1:4],(0,0,5/n))  ##smer hitrosti
     nrm=numpy.linalg.norm(data[:,3:6],axis=1)**2
-    #data[:,4:7]/=numpy.vstack((nrm,nrm,nrm)).T  ##velikost hitrosti
+    data[:,4:7]/=numpy.vstack((nrm,nrm,nrm)).T  ##velikost hitrosti
     #data[:,4:7]+=numpy.random.rand(n,3)-0.5 #nakljucnost hitrosti
     data[:,4:7]*=15
     data[:,4:7]-=numpy.sum(data[:,4:7],0)/n
@@ -21,7 +21,9 @@ def update_py(data,korak=0.1):
         for j in range(data.shape[0]):
             if i!=j:
                 dx=data[j,1:4]-data[i,1:4]
-                data[i,4:7]+=G*korak*data[j,0]*dx /(dx[0]**2+dx[1]**2+dx[2]**2)**0.5 **3
+                tmp = G * korak * data[j, 0] * (dx[0] ** 2 + dx[1] ** 2 + dx[2] ** 2) ** -1.5
+                tmp=min(tmp,1*korak)
+                data[i,4:7]+= tmp *dx
     data[:,1:4]+=korak*data[:,4:7]
 
 def update_np(data,korak=0.1): #ne dela pravilno!
